@@ -22,7 +22,7 @@ client.connect(() => {
   const usersDataHelper = require('./lib/users-data-helpers')(client);
   const {getUserMiddleware, usersRouter} = require('./routes/users')(usersDataHelper);
 
-  const urlsDataHelper = require('./lib/urls-data-helpers')();
+  const urlsDataHelper = require('./lib/urls-data-helpers')(client);
   const {urlsRouter} = require('./routes/urls')(urlsDataHelper);
 
   // Sets user as a global variable
