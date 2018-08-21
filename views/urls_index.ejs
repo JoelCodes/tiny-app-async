@@ -10,11 +10,11 @@
     <h3>My URLs</h3>
     <% if (user) { %>
     <ul>
-      <% for(var key in urls) { %>
+      <% for(var url of urls) { %>
       <li>
-        <%= key + ": " + urls[key].longURL %>
-        <form action="/urls/<%= key %>/delete" method="POST">
-        <a href="/urls/<%= key %>">Edit</a>
+        <%= url.shortUrl + ": " + url.longUrl %>
+        <form action="/urls/<%= url.shortUrl %>/delete" method="POST">
+        <a href="/urls/<%= url.shortUrl %>">Edit</a>
         <button>Delete</button>
         <br><br>
         </form>
