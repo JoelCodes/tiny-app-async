@@ -13,14 +13,16 @@ app.use(cookieSession({
   maxAge: 24 * 60 * 60 * 1000
 }));
 
-const {getUserMiddleware, usersRouter} = require('./routes/users');
-const {urlsRouter} = require('./routes/urls');
-// Sets user as a global variable
+const usersDataHelper = require('./lib/users-data-helpers');
+const {getUserMiddleware, usersRouter} = require('./routes/users')(usersDataHelper);
 
+const urlsDataHelper = require('./lib/urls-data-helpers');
+const {urlsRouter} = require('./routes/urls')(urlsDataHelper);
+
+// Sets user as a global variable
 app.use(getUserMiddleware);
 app.use(usersRouter);
 app.use(urlsRouter);
-
 
 app.listen(PORT, () => {
   console.log(`Example app listening on port ${PORT}!`);
