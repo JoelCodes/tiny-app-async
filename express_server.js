@@ -1,7 +1,7 @@
 const express = require("express");
 const bodyParser = require("body-parser");
 const cookieSession = require("cookie-session");
-
+const {Client} = require('pg');
 const app = express();
 const PORT = process.env.PORT || 8080;
 
@@ -13,17 +13,25 @@ app.use(cookieSession({
   maxAge: 24 * 60 * 60 * 1000
 }));
 
-const usersDataHelper = require('./lib/users-data-helpers')();
-const {getUserMiddleware, usersRouter} = require('./routes/users')(usersDataHelper);
+const client = new Client({
+  database: 'tiny_app_pg',
+});
 
-const urlsDataHelper = require('./lib/urls-data-helpers')();
-const {urlsRouter} = require('./routes/urls')(urlsDataHelper);
+client.connect(() => {
 
-// Sets user as a global variable
-app.use(getUserMiddleware);
-app.use(usersRouter);
-app.use(urlsRouter);
+  const usersDataHelper = require('./lib/users-data-helpers')(client);
+  const {getUserMiddleware, usersRouter} = require('./routes/users')(usersDataHelper);
 
-app.listen(PORT, () => {
-  console.log(`Example app listening on port ${PORT}!`);
+  const urlsDataHelper = require('./lib/urls-data-helpers')();
+  const {urlsRouter} = require('./routes/urls')(urlsDataHelper);
+
+  // Sets user as a global variable
+  app.use(getUserMiddleware);
+  app.use(usersRouter);
+  app.use(urlsRouter);
+
+  app.listen(PORT, () => {
+    console.log(`Example app listening on port ${PORT}!`);
+  });
+
 });
